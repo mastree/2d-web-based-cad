@@ -149,9 +149,9 @@ class MapItem {
                 if (isInsideTrigon([posX, posY], vert.slice(i, i + 6))) return true;
             }
         } else if (vert.length == 4){
-            if (pointToLineDistance([posX, posY], vert) == 0) return true;
+            if (pointToLineDistance([posX, posY], vert) <= 3) return true;
         } else if (vert.length == 2){
-            if (pointToPointDistance([posX, posY], vert) == 0) return true;
+            if (pointToPointDistance([posX, posY], vert) <= 3) return true;
         }
         return false;
     }

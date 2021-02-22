@@ -1,7 +1,7 @@
 import MapItem from './item'
 
 class ItemManager {
-    items: Array<MapItem>;
+    public items: Array<MapItem>;
 
     constructor(){
         this.items = new Array<MapItem>();
@@ -17,6 +17,13 @@ class ItemManager {
             item.bind();
             item.draw();
         }
+    }
+    renderWith(items: MapItem[]){
+        for (const item of items){
+            item.bind();
+            item.draw();
+        }
+        this.render();
     }
 }
 

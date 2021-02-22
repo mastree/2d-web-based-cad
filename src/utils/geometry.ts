@@ -2,6 +2,8 @@ export function isInsideTrigon(pt: number[], vert: number[]): boolean{
     let as_x = pt[0];
     let as_y = pt[1];
 
+    let sx = pt[0];
+    let sy = pt[1];
     let ax = vert[0];
     let ay = vert[1];
     let bx = vert[2];

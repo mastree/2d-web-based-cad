@@ -5,20 +5,18 @@ import ItemManager from './utils/itemManager'
 
 let cadState = {
     mousePos: {x: 0, y: 0},
+    state: "nothing",
+    bufferItem: []
 };
 
 var canvas = document.getElementById('Drawing-surface') as HTMLCanvasElement;
 canvas.width = 800;
 canvas.height = 600;
-var gl = canvas.getContext('webgl');
-if (!gl){
-    gl = canvas.getContext('experimental-webgl');
-}
 canvas.addEventListener('mousemove', (event) => {
     const bound = canvas.getBoundingClientRect()
     const res = {
         x: event.clientX - bound.left,
-        y: event.clientY - bound.top
+        y: canvas.height - (event.clientY - bound.top)
     }
     cadState.mousePos = res
 }, false)
@@ -26,6 +24,11 @@ canvas.addEventListener('click', (event) => {
     const bound = canvas.getBoundingClientRect()
     console.log(cadState.mousePos.x, cadState.mousePos.y);
 }, false)
+var gl = canvas.getContext('webgl');
+if (!gl){
+    gl = canvas.getContext('experimental-webgl');
+}
+
 async function main() {
     if (!gl) {
         alert('Your browser does not support WebGL');
@@ -34,9 +37,9 @@ async function main() {
     var vert = await fetchShader('vertexShader.glsl')
     var frag = await fetchShader('fragmentShader.glsl')
 
-    // gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.viewport(0, 0, canvas.width, canvas.height);
     console.log(canvas.width, canvas.height);
-    gl.clearColor(0.9, 0.9, 0.9, 1);
+    // gl.clearColor(0.9, 0.9, 0.9, 1);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER);
@@ -74,6 +77,39 @@ async function main() {
     // manager.push(tri4);
 
     manager.render();
-}
 
-main();
+    var drawEvent = {
+        'click':
+        function click(){
+            const bound = canvas.getBoundingClientRect()
+            let item = new MapItem(gl, shaderProgram);
+            item.createItem([cadState.mousePos.x, cadState.mousePos.y], [1.0, 0.0, 0.0, 1])
+            cadState.bufferItem.push(item);
+            manager.renderWith(cadState.bufferItem);
+        },
+    }
+    var selectEvent = {
+        'click':
+        function click(){
+            const bound = canvas.getBoundingClientRect()
+            let len = manager.items.length;
+            let ins = -1;
+            for (let i=0;i<len;i++){
+                if (manager.items[i].isInside(cadState.mousePos.x, cadState.mousePos.y)) ins = i;
+            }
+            console.log(ins);
+        },
+    }
+
+
+    // USE THIS FOR draw event listener
+    for (let eve in drawEvent){
+        canvas.addEventListener(eve, drawEvent[eve]);
+    }
+
+    // USE THIS FOR select event listener
+    // for (let eve in selectEvent){
+    //     canvas.addEventListener(eve, selectEvent[eve]);
+    // }
+}
+main()
