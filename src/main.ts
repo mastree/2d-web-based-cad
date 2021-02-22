@@ -34,7 +34,7 @@ async function main() {
     var vert = await fetchShader('vertexShader.glsl')
     var frag = await fetchShader('fragmentShader.glsl')
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    // gl.viewport(0, 0, canvas.width, canvas.height);
     console.log(canvas.width, canvas.height);
     gl.clearColor(0.9, 0.9, 0.9, 1);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);

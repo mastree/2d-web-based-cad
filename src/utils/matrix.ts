@@ -1,3 +1,4 @@
+// Matrix multiplication
 export function matrixMult(a: number[], b: number[]): number[]{
     let ret: number[] = [];
     for (let i=0;i<9;i++) ret.push(0);
@@ -10,6 +11,8 @@ export function matrixMult(a: number[], b: number[]): number[]{
     }
     return ret;
 }
+
+// Matrix addition
 export function matrixAdd(a: number[], b: number[]): number[]{
     let ret: number[] = a;
     for (let i=0;i<a.length;i++){
