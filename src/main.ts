@@ -18,7 +18,7 @@ async function main() {
     var vert = await fetchShader('vertexShader.glsl')
     var frag = await fetchShader('fragmentShader.glsl')
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    // gl.viewport(0, 0, canvas.width, canvas.height);
     console.log(canvas.width, canvas.height);
     gl.clearColor(0.9, 0.9, 0.9, 1);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -35,6 +35,10 @@ async function main() {
     gl.attachShader(shaderProgram, vertShader);
     gl.attachShader(shaderProgram, fragShader);
     gl.linkProgram(shaderProgram);
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    // const u_resolution = gl.getUniformLocation(shaderProgram, 'u_resolution');
+    // gl.uniform2f(u_resolution, canvas.width, canvas.height);
 
     const tri1 = new MapItem(gl, shaderProgram);
     tri1.createItem([0.0, 0.5, -0.5, -0.5, 0.5, -0.5], [1.0, 1.0, 0.0, 1.0, 0.7, 0.0, 1.0, 1.0, 0.1, 1.0, 0.6, 1.0]);
