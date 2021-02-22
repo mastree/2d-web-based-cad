@@ -1,3 +1,4 @@
+// Mapping object inside WebGL
 class MapItem {
     gl: WebGL2RenderingContext;
     shader: WebGLProgram;
@@ -18,6 +19,7 @@ class MapItem {
             0, 0, 1
         ];
     }
+
     createItem(verts: number[], cols: number[]){
         let minx = verts[0];
         let maxx = verts[0];
@@ -50,14 +52,20 @@ class MapItem {
         this.colors = cols;
         this.pos = [centerx, centery];
     }
+
+    // Translation matrix
     translateItem(delx: number, dely: number){
         this.pos[0] += delx;
         this.pos[1] += dely;
     }
+
+    // Set new coordinates position
     setPosition(newx: number, newy: number){
         this.pos[0] = newx;
         this.pos[1] = newy;
     }
+
+    // Scaling matrix
     scaleItem(kx: number, ky: number){
         let len = this.vertices.length;
         for (let i=0;i<len;i++){
@@ -68,12 +76,16 @@ class MapItem {
             }
         }
     }
+
+    // Scaling matrix
     scaleItem(k: number){
         let len = this.vertices.length;
         for (let i=0;i<len;i++){
             this.vertices[i] *= k;
         }
     }
+
+    // Rotate matrix
     rotateItem(deg: number){
         const rad = deg * Math.PI / 180;
         const sin = Math.sin(rad);
@@ -86,6 +98,8 @@ class MapItem {
             this.vertices[i + 1] = tempx * sin + tempy * cos;
         }
     }
+
+    // Create and binding buffer data
     bind() {
         const gl = this.gl
         const nbuff = gl.createBuffer()
@@ -110,6 +124,8 @@ class MapItem {
         }
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(forBinding), gl.STATIC_DRAW);
     }
+
+    // Draw defined matrix
     draw(){
         const gl = this.gl
         gl.useProgram(this.shader)

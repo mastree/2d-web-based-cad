@@ -1,3 +1,4 @@
+// Load shader and create based on loaded shader
 export const loadShader = async (gl: WebGL2RenderingContext, type: number, source: string) => {
     const rawShader = await fetchShader(source)
     const shader = gl.createShader(type)
@@ -12,11 +13,14 @@ export const loadShader = async (gl: WebGL2RenderingContext, type: number, sourc
 }
 
 
+// Fetch shader from glsl
 export async function fetchShader(source: string) {
     const shader = await fetch('/shaders/' + source).then(res => res.text())
     return shader
 }
 
+
+// Attach and link shader program
 export async function initShaderFiles(gl: WebGL2RenderingContext, vert: string, frag: string) {
     const vs = await loadShader(gl, gl.VERTEX_SHADER, vert)
     const fs = await loadShader(gl, gl.FRAGMENT_SHADER, frag)
