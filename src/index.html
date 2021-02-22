@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html style="background-color: bisque;">
     <head>
+        <link rel="stylesheet" href="./css/index.css">
         <title>WebGL - Simple CAD</title>
     </head>
     <body>
-        <canvas id="Drawing-surface" style="background-color: whitesmoke;">
-            Your browser doesn't support HTML5
-        </canvas>
-        <br />
-        <i>Demo is above this text</i>
+        <div class="main-container">
+            <div class="column-1">
+                <canvas id="Drawing-surface">
+                    Your browser doesn't support HTML5
+                </canvas>
+                <br />
+                <i>Demo is above this text</i>
+            </div>
+            <div class="column-2">
+                <button class="button-custom-1" id="draw-button">Draw</button>
+                <div id="draw-child">
+                    <button class="button-custom-2">Done</button>
+                    <button class="button-custom-2">Cancel</button>
+                </div>
+                <button class="button-custom-1" id="select-button">Select</button>
+                <div id="select-child">
+                    <button class="button-custom-2">Move</button>
+                    <button class="button-custom-2">Resize</button>
+                    <button class="button-custom-2">Change Color</button>
+                </div>
+            </div>
+        </div>
         <script src="main.js" type="module"></script>
+        <script src="./js/script.js"></script>
     </body>
 </html>
