@@ -1,9 +1,11 @@
+import { isInsideTrigon, pointToLineDistance, pointToPointDistance } from './geometry'
+
 class MapItem {
     gl: WebGL2RenderingContext;
     shader: WebGLProgram;
 
     vertices: number[];
-    colors: number[];
+    colors: number[]; // length = 4
     pos: number[]; // length = 2
 
     projectionMatrix: number[];
@@ -58,15 +60,8 @@ class MapItem {
         this.pos[0] = newx;
         this.pos[1] = newy;
     }
-    scaleItem(kx: number, ky: number){
-        let len = this.vertices.length;
-        for (let i=0;i<len;i++){
-            if (i & 1){
-                this.vertices[i] *= ky;
-            } else{
-                this.vertices[i] *= kx;
-            }
-        }
+    setColor(cols: number[]){
+        this.colors = cols;
     }
     scaleItem(k: number){
         let len = this.vertices.length;
@@ -91,40 +86,65 @@ class MapItem {
         const nbuff = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, nbuff)
 
-        const vert = this.vertices;
+        const vert = [...this.vertices];
         let len = vert.length;
         for (let i=0;i<len;i++){
             vert[i] += this.pos[(i & 1)];
         }
-        const forBinding = [];
-        let vertid = 0;
-        let colid = 0;
-        for (let i=0;i<len * 6;i++){
-            if (i % 6 < 2){
-                forBinding.push(vert[vertid]);
-                vertid++;
-            } else{
-                forBinding.push(this.colors[colid]);
-                colid++;
+        if (vert.length >= 6){
+            for (let i=0;i<4;i++){
+                vert.push(vert[i]);
             }
         }
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(forBinding), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vert), gl.STATIC_DRAW);
     }
     draw(){
         const gl = this.gl
         gl.useProgram(this.shader)
+
         const vertexPos = gl.getAttribLocation(this.shader, 'a_pos');
-        const vertexCol = gl.getAttribLocation(this.shader, 'vertColor');
+        const fragCol = gl.getUniformLocation(this.shader, 'u_fragColor');
         const vertexProj = gl.getUniformLocation(this.shader, 'u_proj_mat')
+        const u_resolution = gl.getUniformLocation(this.shader, 'u_resolution')
+
+        gl.uniform2f(u_resolution, gl.canvas.width, gl.canvas.height)
+        gl.uniform4fv(fragCol, this.colors)
+        gl.uniformMatrix3fv(vertexProj, false, this.projectionMatrix);
 
         gl.enableVertexAttribArray(vertexPos);
-        gl.enableVertexAttribArray(vertexCol);
+        gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, gl.FALSE, 2 * Float32Array.BYTES_PER_ELEMENT, 0 * Float32Array.BYTES_PER_ELEMENT);
 
-        gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, gl.FALSE, 6 * Float32Array.BYTES_PER_ELEMENT, 0 * Float32Array.BYTES_PER_ELEMENT);
-        gl.vertexAttribPointer(vertexCol, 4, gl.FLOAT, gl.FALSE, 6 * Float32Array.BYTES_PER_ELEMENT, 2 * Float32Array.BYTES_PER_ELEMENT);
-        gl.uniformMatrix3fv(vertexProj, false, this.projectionMatrix);
-        
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        if (this.vertices.length >= 6){
+            for (let i=0;i<this.vertices.length;i+=2){
+                gl.drawArrays(gl.TRIANGLES, i / 2, 3);
+            }
+        } else if (this.vertices.length == 4){
+            gl.drawArrays(gl.LINES, 0, 2);
+        } else if (this.vertices.length == 2){
+            gl.drawArrays(gl.POINTS, 0, 1);
+        }
+    }
+    isInside(posX: number, posY: number): boolean{
+        const vert = [...this.vertices];
+        let len = vert.length;
+        for (let i=0;i<len;i++){
+            vert[i] += this.pos[(i & 1)];
+        }
+        if (vert.length >= 6){
+            for (let i=0;i<4;i++){
+                vert.push(vert[i]);
+            }
+        }
+        if (vert.length >= 6){
+            for (let i=0;i<this.vertices.length;i+=2){
+                if (isInsideTrigon([posX, posY], vert.slice(i, i + 6))) return true;
+            }
+        } else if (vert.length == 4){
+            if (pointToLineDistance([posX, posY], vert) == 0) return true;
+        } else if (vert.length == 2){
+            if (pointToPointDistance([posX, posY], vert) == 0) return true;
+        }
+        return false;
     }
 }
 
