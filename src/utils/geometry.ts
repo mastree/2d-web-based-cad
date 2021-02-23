@@ -1,6 +1,6 @@
 export function isInsideTrigon(pt: number[], vert: number[]): boolean{
-    let as_x = pt[0];
-    let as_y = pt[1];
+    let as_x = pt[0] - vert[0];
+    let as_y = pt[1] - vert[1];
 
     let sx = pt[0];
     let sy = pt[1];
@@ -31,18 +31,18 @@ export function pointToLineDistance(pt: number[], line: number[]): number{
     let x2 = line[2];
     let y2 = line[3];
     
-    var A = x - x1;
-    var B = y - y1;
-    var C = x2 - x1;
-    var D = y2 - y1;
+    let A = x - x1;
+    let B = y - y1;
+    let C = x2 - x1;
+    let D = y2 - y1;
   
-    var dot = A * C + B * D;
-    var len_sq = C * C + D * D;
-    var param = -1;
+    let dot = A * C + B * D;
+    let len_sq = C * C + D * D;
+    let param = -1;
     if (len_sq != 0) //in case of 0 length line
         param = dot / len_sq;
   
-    var xx, yy;
+    let xx, yy;
   
     if (param < 0) {
         xx = x1;
@@ -57,7 +57,60 @@ export function pointToLineDistance(pt: number[], line: number[]): number{
         yy = y1 + param * D;
     }
   
-    var dx = x - xx;
-    var dy = y - yy;
+    let dx = x - xx;
+    let dy = y - yy;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+export function sortPoint(pt: number[]): number[]{
+    // Array of points;
+    let points: {x: number, y:number}[] = [];
+    let len = pt.length / 2;
+    for (let i=0;i<len;i++){
+        points.push({x: pt[i * 2], y: pt[i * 2 + 1]});
+    }
+
+    // Find min max to get center
+    // Sort from top to bottom
+    points.sort((a,b)=>a.y - b.y);
+
+    // Get center y
+    const cy = (points[0].y + points[points.length -1].y) / 2;
+
+    // Sort from right to left
+    points.sort((a,b)=>b.x - a.x);
+
+    // Get center x
+    const cx = (points[0].x + points[points.length -1].x) / 2;
+
+    // Center point
+    const center = {x:cx,y:cy};
+
+    // Pre calculate the angles as it will be slow in the sort
+    // As the points are sorted from right to left the first point
+    // is the rightmost
+
+    // Starting angle used to reference other angles
+    let startAng;
+    points.forEach(point => {
+        let ang = Math.atan2(point.y - center.y,point.x - center.x);
+        if(!startAng){ startAng = ang }
+        else {
+            if(ang < startAng){  // ensure that all points are clockwise of the start point
+                ang += Math.PI * 2;
+            }
+        }
+        point.angle = ang; // add the angle to the point
+    });
+
+
+    // Sort clockwise;
+    points.sort((a,b)=> a.angle - b.angle);
+
+    let ret: number[] = [];
+    for (const obj of points){
+        ret.push(obj.x);
+        ret.push(obj.y);
+    }
+    return ret;
 }

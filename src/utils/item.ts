@@ -1,14 +1,14 @@
-import { isInsideTrigon, pointToLineDistance, pointToPointDistance } from './geometry'
+import { isInsideTrigon, pointToLineDistance, pointToPointDistance, sortPoint } from './geometry'
 
 class MapItem {
-    gl: WebGL2RenderingContext;
-    shader: WebGLProgram;
+    public gl: WebGL2RenderingContext;
+    public shader: WebGLProgram;
 
-    vertices: number[];
-    colors: number[]; // length = 4
-    pos: number[]; // length = 2
+    public vertices: number[];
+    public colors: number[]; // length = 4
+    public pos: number[]; // length = 2
 
-    projectionMatrix: number[];
+    public projectionMatrix: number[];
 
     constructor(gl: WebGL2RenderingContext, shader: WebGLProgram){
         this.gl = gl;
@@ -49,7 +49,7 @@ class MapItem {
                 verts[i] -= centerx;
             }
         }
-        this.vertices = verts;
+        this.vertices = verts;//sortPoint(verts);
         this.colors = cols;
         this.pos = [centerx, centery];
     }
@@ -88,22 +88,35 @@ class MapItem {
         }
     }
 
+    getVertForBinding(): number[]{
+        let vert = [...this.vertices];
+        let len = vert.length;
+        for (let i=0;i<len;i++){
+            vert[i] += this.pos[(i & 1)];
+        }
+        if (vert.length >= 6){
+            let ctr = [vert[0], vert[1]];
+            let sisa = vert.slice(2, len);
+            len = sisa.length;
+            vert = [];
+            for (let i=0;i<len;i+=2){
+                vert.push(ctr[0]);
+                vert.push(ctr[1]);
+                vert.push(sisa[i]);
+                vert.push(sisa[i + 1]);
+                vert.push(sisa[(i + 2) % len]);
+                vert.push(sisa[(i + 3) % len]);
+            }
+        }
+        return vert;
+    }
     // Create and binding buffer data
     bind() {
         const gl = this.gl
         const nbuff = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, nbuff)
 
-        const vert = [...this.vertices];
-        let len = vert.length;
-        for (let i=0;i<len;i++){
-            vert[i] += this.pos[(i & 1)];
-        }
-        if (vert.length >= 6){
-            for (let i=0;i<4;i++){
-                vert.push(vert[i]);
-            }
-        }
+        const vert = this.getVertForBinding();
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vert), gl.STATIC_DRAW);
     }
 
@@ -123,30 +136,24 @@ class MapItem {
         gl.enableVertexAttribArray(vertexPos);
         gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, gl.FALSE, 2 * Float32Array.BYTES_PER_ELEMENT, 0 * Float32Array.BYTES_PER_ELEMENT);
 
-        if (this.vertices.length >= 6){
-            for (let i=0;i<this.vertices.length;i+=2){
-                gl.drawArrays(gl.TRIANGLES, i / 2, 3);
+        const vert = this.getVertForBinding();
+        if (vert.length >= 6){
+            let len = vert.length / 2;
+            for (let i=0;i<len - 2;i+=3){
+                gl.drawArrays(gl.TRIANGLES, i, 3);
             }
-        } else if (this.vertices.length == 4){
+        } else if (vert.length == 4){
             gl.drawArrays(gl.LINES, 0, 2);
-        } else if (this.vertices.length == 2){
+        } else if (vert.length == 2){
             gl.drawArrays(gl.POINTS, 0, 1);
         }
     }
     isInside(posX: number, posY: number): boolean{
-        const vert = [...this.vertices];
-        let len = vert.length;
-        for (let i=0;i<len;i++){
-            vert[i] += this.pos[(i & 1)];
-        }
+        const vert = this.getVertForBinding();
         if (vert.length >= 6){
-            for (let i=0;i<4;i++){
-                vert.push(vert[i]);
-            }
-        }
-        if (vert.length >= 6){
-            for (let i=0;i<this.vertices.length;i+=2){
-                if (isInsideTrigon([posX, posY], vert.slice(i, i + 6))) return true;
+            let len = vert.length / 2;
+            for (let i=0;i<len - 2;i+=3){
+                if (isInsideTrigon([posX, posY], vert.slice(i * 2, (i + 3) * 2))) return true;
             }
         } else if (vert.length == 4){
             if (pointToLineDistance([posX, posY], vert) <= 3) return true;

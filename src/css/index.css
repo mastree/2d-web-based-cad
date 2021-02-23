@@ -36,6 +36,11 @@
     padding-left: 4%;
 }
 
+#select-changeColor-child {
+    display: none;
+    padding-left: 4%;
+}
+
 .button-custom-2 {
     box-sizing: border-box;
     width: 70%;
@@ -48,3 +53,6 @@ button:hover {
     opacity: 0.6;
 }
 
+.label-section{
+    font-weight: 600;
+}

@@ -5,26 +5,44 @@
         <title>WebGL - Simple CAD</title>
     </head>
     <body>
+        <iframe name="hidden-iframe" style="display: none;"></iframe>
         <div class="main-container">
             <div class="column-1">
-                <canvas id="Drawing-surface">
+                <canvas id="Drawing-surface" style="background-color: whitesmoke;">
                     Your browser doesn't support HTML5
                 </canvas>
                 <br />
-                <i>Demo is above this text</i>
             </div>
             <div class="column-2">
                 <button class="button-custom-1" id="draw-button">Draw</button>
                 <div id="draw-child">
-                    <button class="button-custom-2">Done</button>
-                    <button class="button-custom-2">Cancel</button>
+                    <button class="button-custom-2" id="draw-done">Done</button>
+                    <button class="button-custom-2" id="draw-cancel">Cancel</button>
                 </div>
-                <button class="button-custom-1" id="select-button">Select</button>
+                <button class="button-custom-1" id="select-button">Modify</button>
                 <div id="select-child">
-                    <button class="button-custom-2">Move</button>
-                    <button class="button-custom-2">Resize</button>
-                    <button class="button-custom-2">Change Color</button>
+                    <button class="button-custom-2" id="select-move">Move</button>
+                    <button class="button-custom-2" id="select-resize">Resize</button>
+                    <button class="button-custom-2" id="select-changeColor">Change Color</button>
                 </div>
+                <div id="select-changeColor-child">
+                    <label for="changeColor">Pilih item yang ingin diberi warna:</label>
+                    <input type="color" id="changeColor" name="changeColor" value="#ff0000">
+                </div>
+                <button class="button-custom-1" id="save-button">Save</button>
+                <p class="label-section">Download Saved File</p>
+                <form onsubmit="download(this['name'].value, this['text'].value)" target="hidden-iframe">
+                    <label for="name">Nama file untuk didownload:</label>
+                    <input type="text" name="name" value="project.json">
+                    <input type="hidden" name="text" id="projState"></input><br/><br/>
+                    <input class="button-custom-1" type="submit" value="Download">
+                </form>
+                <p class="label-section">Load File</p>
+                <form target="hidden-iframe">
+                    <label for="myfile">Select a file:</label>
+                    <input type="file" id="myfile" name="myfile"><br/><br/>
+                    <input class="button-custom-1" id="load-button" type="submit" value="Load">
+                </form>
             </div>
         </div>
         <script src="main.js" type="module"></script>
