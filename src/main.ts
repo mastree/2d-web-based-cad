@@ -180,12 +180,7 @@ async function main() {
                 let initdely = cadState.initPos.y - cy
                 let curdelx = cadState.mousePos.x - cx
                 let curdely = cadState.mousePos.y - cy
-                // manager.items[cadState.lastSelect].scaleItem(Math.min(cadState.mousePos.x - cadState.initPos.x, cadState.mousePos.y - cadState.initPos.y));
-                // if (Math.abs(curdelx / initdelx) < Math.abs(curdely / initdely)){
-                    // manager.items[cadState.lastSelect].scaleItem(curdelx / initdelx);
-                // } else{
                 manager.items[cadState.lastSelect].scaleItem(curdely / initdely);
-                // }
                 cadState.initPos = cadState.mousePos;
                 manager.render();
             }
