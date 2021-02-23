@@ -17,6 +17,7 @@ let cadState = {
     bufferItem: [],
     lastSelect: -1,
     initPos: {x: 0, y: 0},
+    drawSquare: false,
 };
 
 var canvas = document.getElementById('Drawing-surface') as HTMLCanvasElement;
@@ -111,6 +112,43 @@ async function main() {
             manager.renderWith(cadState.bufferItem);
         },
     }
+    var drawSquareEvent = {
+        'mousedown':
+        function onmousedown(){
+            let len = manager.items.length;
+            cadState.initPos.x = cadState.mousePos.x
+            cadState.initPos.y = cadState.mousePos.y
+            cadState.drawSquare = true;
+        },
+        'mouseup':
+        function onmouseup(){
+            let delx = Math.abs(cadState.mousePos.x - cadState.initPos.x);
+            let dely = Math.abs(cadState.mousePos.y - cadState.initPos.y);
+            let mx = Math.max(delx, dely);
+            
+            let item = new MapItem(gl, shaderProgram);
+            item.createItem([mx, mx, mx, -mx, -mx, mx, -mx, -mx], [1, 0, 0, 1]);
+            item.setPosition(cadState.initPos.x, cadState.initPos.y);
+
+            manager.push(item);
+            manager.render();
+            cadState.drawSquare = false;
+        },
+        'mousemove':
+        function onmove(){
+            if (cadState.drawSquare){
+                let delx = Math.abs(cadState.mousePos.x - cadState.initPos.x);
+                let dely = Math.abs(cadState.mousePos.y - cadState.initPos.y);
+                let mx = Math.max(delx, dely);
+                
+                let item = new MapItem(gl, shaderProgram);
+                item.createItem([mx, mx, mx, -mx, -mx, mx, -mx, -mx], [1, 0, 0, 1]);
+                item.setPosition(cadState.initPos.x, cadState.initPos.y);
+    
+                manager.renderWith([item]);
+            }
+        }
+    }
     var selectEvent = {
         'click':
         function click(){
@@ -201,13 +239,30 @@ async function main() {
             }
         }
     }
+    var deleteEvent = {
+        'click':
+        function click(){
+            let len = manager.items.length;
+            let ins = -1;
+            for (let i=0;i<len;i++){
+                if (manager.items[i].isInside(cadState.mousePos.x, cadState.mousePos.y)) ins = i;
+            }
+            if (ins != -1){
+                manager.deleteItem(ins);    
+	            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                manager.render();
+            }
+        },
+    }
     var stateEvent = {
         "nothing": {},
         "draw": drawEvent,
+        "draw-square": drawSquareEvent,
         "select": selectEvent,
         "move": moveEvent,
         "resize": resizeEvent,
-        "change-color": changeColorEvent
+        "change-color": changeColorEvent,
+        "delete": deleteEvent
     }
     function clearCanvasStateEventListener(){
         for (const st in stateEvent){
@@ -218,9 +273,12 @@ async function main() {
         cadState.state = "nothing";
         cadState.bufferItem = [];
         cadState.lastSelect = -1;
+        cadState.drawSquare = false;
 
         let inp = document.getElementById("select-changeColor-child") as HTMLDivElement;
         inp.style.display = "none";
+        document.getElementById("draw-child").style.display = "none";
+        document.getElementById("select-child").style.display = "none";
     }
 
     const buttonDraw = document.getElementById("draw-button") as HTMLButtonElement;
@@ -258,6 +316,15 @@ async function main() {
         
         let button = document.getElementById("draw-child") as HTMLButtonElement;
         button.style.display = "none";
+    });
+
+    const buttonDrawSquare = document.getElementById("draw-square-button") as HTMLButtonElement;
+    buttonDrawSquare.addEventListener("click", () => {
+        clearCanvasStateEventListener();
+        cadState.state = "draw-square";
+        for (const evCur in stateEvent[cadState.state]){
+            canvas.addEventListener(evCur, stateEvent[cadState.state][evCur])
+        }
     });
 
     const buttonSelect = document.getElementById("select-button") as HTMLButtonElement;
@@ -308,6 +375,15 @@ async function main() {
         inp.style.display = "block";
     });
 
+    const buttonDelete = document.getElementById("delete-button") as HTMLButtonElement;
+    buttonDelete.addEventListener("click", () => {
+        clearCanvasStateEventListener();
+        cadState.state = "delete";
+        for (const evCur in stateEvent[cadState.state]){
+            canvas.addEventListener(evCur, stateEvent[cadState.state][evCur])
+        }
+    });
+
     const buttonSave = document.getElementById("save-button") as HTMLButtonElement;
     buttonSave.addEventListener("click", () => {
         saveProject();
@@ -315,7 +391,9 @@ async function main() {
 
     const buttonLoad = document.getElementById("load-button") as HTMLButtonElement;
     buttonLoad.addEventListener("click", () => {
-        loadFile();
+        if (document.getElementById("myfile").files.length > 0){
+            loadFile();
+        }
     });
 }
 main()
