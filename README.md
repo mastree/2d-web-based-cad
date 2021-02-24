@@ -1,12 +1,17 @@
-# 2d-web-based-cad
-# How To Install
-1. Write on command line:
+# Tugas Besar 1 - IF3260 Grafika Komputer
+Program ini dibuat oleh kelompok 13 kelas 2 yang beranggotakan tiga orang:
+- Muhammad Kamal Shafi	        13518113
+- Lionnarta Savirandy	        13518128
+- Arya Beri Argya Rasidi	13518131
 
-        yarn install
+## 2D-Web-Based-CAD
+> Program ini merupakan program Computer Aided Design 2 dimensi berbasis website yang memanfaatkan library WebGL. Program ini membantu pengguna untuk membuat model objek seperti titik, garis, persegi, dan poligon. Selain membuat model tersebut, program ini juga mampu untuk melakukan transformasi pada model seperti menggeser model (Translasi) dan mengubah ukuran model (Dilatasi). Program juga mampu memberikan warna pada model yang telah dibuat oleh pengguna. Program yang dibuat dapat menyimpan model yang telah dibuat kedalam file JSON dan memuatnya kembali sewaktu diperlukan. Untuk mengetahui cara menggunakan program, pengguna dapat membuka file `Dokumentasi Tugas Besar 1 IF3260 CAD 2D` yang terdapat pada folder. Selain itu pengguna juga dapat panduan yang terdapat pada program nantinya dengan menekan tombol `Help`.
+![alt text](https://github.com/mastree/2d-web-based-cad/blob/main/src/img/help.png "Help")
 
-# How To Run
-1. Write on command line:
+## Instalasi Program
+1. Pengguna menginstall dependensi pada program dengan memasukan perintah `yarn install`.
+2. Jika pengguna belum menginstall yarn, maka pengguna dapat menginstall yarn menggunakan npm dengan memasukkan perintah `npm install --global yarn`.
 
-        yarn start
-
-2. Open localhost:8080 on browser
+## Menjalankan Program
+1. Untuk menjalankan program, pengguna memasukkan perintah `yarn start`.
+2. Jika aplikasi tidak terbuka secara otomatis, pengguna dapat membuak aplikasi secara manual melalui `localhost:8080`.
