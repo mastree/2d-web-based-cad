@@ -1,7 +1,7 @@
 module.exports = {
     mount: {
       public: { url: '/', static: true },
-      src: { url: '/dist' },
+      src: { url: '/src' },
     },
     buildOptions: {
         // put the build files in /docs
