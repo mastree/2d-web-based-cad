@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/help.css">
+    <title>CAD - HELP</title>
+</head>
+<body>
+    <div>CAD - GUIDE AND DOCUMENTATION</div>
+    <div class="slideshow-container">
+
+        <!-- All image -->
+        <div class="slides fading">
+            <div class="number-text">1</div>
+            <img src="img/tampilan-awal.png" style="width: 100%;">
+            <div class="text">Ini merupakan tampilan awal CAD</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">2</div>
+            <img src="img/draw-point.gif" style="width: 100%;">
+            <div class="text">Klik tombol draw point or line or polygon lalu klik pada canvas untuk membuat point, kemudian klik tombol done</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">3</div>
+            <img src="img/draw-line.gif" style="width: 100%;">
+            <div class="text">Klik tombol draw point or line or polygon lalu klik pada canvas pada dua tempat berbeda untuk membuat 2 titik. Kemudian klik tombol done dan line akan terbentuk</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">4</div>
+            <img src="img/draw-poly.gif" style="width: 100%;">
+            <div class="text">Klik tombol draw point or line or polygon lalu klik pada canvas pada tiga atau lebih tempat berbeda untuk membuat banyak titik. Kemudian klik tombol done dan polygon akan terbentuk</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">5</div>
+            <img src="img/draw-square.gif" style="width: 100%;">
+            <div class="text">Klik tombol draw square lalu pada canvas klik pada suatu area dan geser mouse anda. Ketika mouse dilepas gambar square telah dibentuk</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">6</div>
+            <img src="img/modify.gif" style="width: 100%;">
+            <div class="text">Buat sebuah objek baru, lalu klik tombol modify maka akan muncul pilihan move, resize, dan change color</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">7</div>
+            <img src="img/modify-move.gif" style="width: 100%;">
+            <div class="text">Untuk memindahkan objek, klik tombol move lalu klik dan geser objek pada canvas yang diinginkan</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">8</div>
+            <img src="img/modify-resize.gif" style="width: 100%;">
+            <div class="text">Untuk mengubah ukuran objek, klik tombol resize dan klik objek lalu tarik dengan menggunakan mouse, maka objek akan mengalami perubahan ukuran</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">9</div>
+            <img src="img/modify-color.gif" style="width: 100%;">
+            <div class="text">Untuk mengubah warna objek, klik tombol change color dan pilih warna yang diinginkan, lalu klik objek yang ingin diubah warnanya</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">10</div>
+            <img src="img/delete.gif" style="width: 100%;">
+            <div class="text">Pada canvas yang terdiri dari beberapa objek, klik tombol delete object dan klik objek yang ingin dihapus pada canvas</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">11</div>
+            <img src="img/save-download.gif" style="width: 100%;">
+            <div class="text">Untuk menyimpan objek yang telah digambar, klik save lalu download. Nama file yang didownload dapat diubah</div>
+        </div>
+        <div class="slides fading">
+            <div class="number-text">12</div>
+            <img src="img/load.gif" style="width: 100%;">
+            <div class="text">Untuk memuat kembali objek dari file, klik choose file lalu pilih file dan open, kemudian klik tombol load dan objek pada file akan dimuat</div>
+        </div>
+
+
+        <!-- Next and previous button -->
+        <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next" onclick="changeSlide(1)">&#10095;</a>
+    </div>
+    <br><br>
+
+    <!-- Current slide dot -->
+    <div style="text-align: center;">
+        <span class="dots" onclick="curSlide(1)"></span>
+        <span class="dots" onclick="curSlide(2)"></span>
+        <span class="dots" onclick="curSlide(3)"></span>
+        <span class="dots" onclick="curSlide(4)"></span>
+        <span class="dots" onclick="curSlide(5)"></span>
+        <span class="dots" onclick="curSlide(6)"></span>
+        <span class="dots" onclick="curSlide(7)"></span>
+        <span class="dots" onclick="curSlide(8)"></span>
+        <span class="dots" onclick="curSlide(9)"></span>
+        <span class="dots" onclick="curSlide(10)"></span>
+        <span class="dots" onclick="curSlide(11)"></span>
+        <span class="dots" onclick="curSlide(12)"></span>
+    </div>
+
+    <script src="src/js/help.js"></script>
+</body>
+</html>
