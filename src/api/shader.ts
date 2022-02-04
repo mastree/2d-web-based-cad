@@ -15,7 +15,7 @@ export const loadShader = async (gl: WebGL2RenderingContext, type: number, sourc
 
 // Fetch shader from glsl
 export async function fetchShader(source: string) {
-    const shader = await fetch('/shaders/' + source).then(res => res.text())
+    const shader = await fetch('dist/shaders/' + source).then(res => res.text())
     return shader
 }
 

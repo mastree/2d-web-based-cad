@@ -1,4 +1,3 @@
-import { matrixAdd, matrixMult } from './utils/matrix'
 import { fetchShader } from './api/shader'
 import MapItem from './utils/item'
 import ItemManager from './utils/itemManager'
